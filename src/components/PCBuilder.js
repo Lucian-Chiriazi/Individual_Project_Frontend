@@ -13,6 +13,11 @@ export default function PCBuilder() {
   const [recommendation, setRecommendation] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const isValidBudget = (val) => {
+    const parsed = parseFloat(val);
+    return val !== "" && !isNaN(parsed) && parsed >= 500 && parsed <= 10000;
+  };
+
   const handlePeripheralChange = (e) => {
     setPeripherals({
       ...peripherals,
@@ -48,15 +53,13 @@ export default function PCBuilder() {
       <input
         type="number"
         value={budget}
-        max={10000}  // Maximum budget of £10,000
         onChange={(e) => setBudget(e.target.value)}
-        placeholder="e.g., 1500"
+        placeholder="e.g. 1500"
       />
-
-      {parseFloat(budget) > 10000 && (
-        <div style={{ color: "red" , fontSize: "0.8rem", marginBottom: "10px"}}>
-          Budget should not exceed £10,000.
-          </div>
+      {budget !== "" && !isValidBudget(budget) && (
+        <div style={{ color: "red", fontSize: "0.9rem", marginBottom: "10px" }}>
+          Budget must be between £500 and £10,000.
+        </div>
       )}
 
       <label>Purpose</label>
@@ -114,8 +117,10 @@ export default function PCBuilder() {
         </div>
       </fieldset>
 
-
-      <button onClick={fetchRecommendations} disabled={loading}>
+      <button
+        onClick={fetchRecommendations}
+        disabled={loading || !isValidBudget(budget)}
+      >
         {loading ? "Loading..." : "Get Recommendation"}
       </button>
 
