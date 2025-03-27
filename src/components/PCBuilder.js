@@ -48,9 +48,16 @@ export default function PCBuilder() {
       <input
         type="number"
         value={budget}
+        max={10000}  // Maximum budget of £10,000
         onChange={(e) => setBudget(e.target.value)}
         placeholder="e.g., 1500"
       />
+
+      {parseFloat(budget) > 10000 && (
+        <div style={{ color: "red" , fontSize: "0.8rem", marginBottom: "10px"}}>
+          Budget should not exceed £10,000.
+          </div>
+      )}
 
       <label>Purpose</label>
       <input
@@ -60,47 +67,53 @@ export default function PCBuilder() {
         placeholder="e.g. gaming, editing"
       />
 
-      <div className="checkbox-group">
-        <label>Include Peripherals:</label>
-        <label>
-          <input
-            type="checkbox"
-            name="keyboard"
-            checked={peripherals.keyboard}
-            onChange={handlePeripheralChange}
-          />
-          Keyboard
-        </label>
-        <label>
-          <input
-            type="checkbox"
-            name="mouse"
-            checked={peripherals.mouse}
-            onChange={handlePeripheralChange}
-          />
-          Mouse
-        </label>
-        <label>
-          <input
-            type="checkbox"
-            name="monitor"
-            checked={peripherals.monitor}
-            onChange={handlePeripheralChange}
-          />
-          Monitor
-        </label>
-      </div>
+      <fieldset className="checkbox-group">
+        <legend>Include Peripherals:</legend>
+        <div className="checkbox-options">
+          <label>
+            <input
+              type="checkbox"
+              name="keyboard"
+              checked={peripherals.keyboard}
+              onChange={handlePeripheralChange}
+            />
+            Keyboard
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              name="mouse"
+              checked={peripherals.mouse}
+              onChange={handlePeripheralChange}
+            />
+            Mouse
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              name="monitor"
+              checked={peripherals.monitor}
+              onChange={handlePeripheralChange}
+            />
+            Monitor
+          </label>
+        </div>
+      </fieldset>
 
-      <div className="checkbox-group">
-        <label>
-          <input
-            type="checkbox"
-            checked={includeOS}
-            onChange={(e) => setIncludeOS(e.target.checked)}
-          />
-          Include Operating System
-        </label>
-      </div>
+      <fieldset className="checkbox-group">
+        <legend>Other Options:</legend>
+        <div className="checkbox-options">
+          <label>
+            <input
+              type="checkbox"
+              checked={includeOS}
+              onChange={(e) => setIncludeOS(e.target.checked)}
+            />
+            Include Operating System
+          </label>
+        </div>
+      </fieldset>
+
 
       <button onClick={fetchRecommendations} disabled={loading}>
         {loading ? "Loading..." : "Get Recommendation"}
