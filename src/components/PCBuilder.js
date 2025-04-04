@@ -33,7 +33,7 @@ export default function PCBuilder() {
 
     for (let line of lines) {
       const match = line.match(
-        /^(?:\d+\.\s*)?(CPU|Processor|GPU|Graphics Card|Motherboard|RAM|Memory|Storage|SSD|HDD|PSU|Power Supply|Case|Cooling System|CPU Cooler|Monitor|Mouse|Keyboard|Operating System)?[:\-]?\s*(.+?)\s*[-]\s*\u00a3?(\d+(\.\d+)?)/i
+        /^(?:\d+\.\s*)?(CPU|Processor|GPU|Graphics Card|Motherboard|RAM|Memory|Storage|SSD|HDD|PSU|Power Supply|Case|Cooling System|CPU Cooler|Monitor|Mouse|Keyboard|Operating System)?[:\-]?\s*(.*?)\\s*[-]\\s*£?(\\d+(\\.\\d+)?)/i
       );
 
       if (match) {
