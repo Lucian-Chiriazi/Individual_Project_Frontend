@@ -11,6 +11,7 @@ export default function PCBuilder() {
   });
   const [includeOS, setIncludeOS] = useState(false);
   const [recommendation, setRecommendation] = useState("");
+  const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
 
   const isValidBudget = (val) => {
@@ -31,7 +32,9 @@ export default function PCBuilder() {
     let otherLines = [];
 
     for (let line of lines) {
-      const match = line.match(/^(?:\d+\.\s*)?(CPU|Processor|GPU|Graphics Card|Motherboard|RAM|Memory|Storage|SSD|HDD|PSU|Power Supply|Case|Cooling System|CPU Cooler|Monitor|Mouse|Keyboard|Operating System)?[:\-]?\s*(.+?)\s*[-]\s*£?(\d+(\.\d+)?)/i);
+      const match = line.match(
+        /^(?:\d+\.\s*)?(CPU|Processor|GPU|Graphics Card|Motherboard|RAM|Memory|Storage|SSD|HDD|PSU|Power Supply|Case|Cooling System|CPU Cooler|Monitor|Mouse|Keyboard|Operating System)?[:\-]?\s*(.+?)\s*[-]\s*\u00a3?(\d+(\.\d+)?)/i
+      );
 
       if (match) {
         items.push({
@@ -40,7 +43,7 @@ export default function PCBuilder() {
           price: match[3],
         });
       } else {
-        otherLines.push(line); // Keep non-matching lines (total, notes, etc.)
+        otherLines.push(line);
       }
     }
 
@@ -63,6 +66,7 @@ export default function PCBuilder() {
 
       const data = await response.json();
       setRecommendation(data.recommendation || "No recommendations found.");
+      setDescription(data.description || "");
     } catch (error) {
       setRecommendation("Error fetching recommendation.");
     }
@@ -148,21 +152,24 @@ export default function PCBuilder() {
 
       {recommendation && (
         <div className="recommendation-box pretty-box">
-          {recommendation && (
-            <div className="recommendation-box pretty-box">
-              <h3>💡 AI-Recommended Build:</h3>
-              {formatRecommendation(recommendation).items.map((item, index) => (
-                <div key={index} className="component-card">
-                  <strong>{item.category}:</strong> {item.name}
-                  <span className="price">£{item.price}</span>
-                </div>
-              ))}
+          <h3>AI-Recommended Build:</h3>
+          {formatRecommendation(recommendation).items.map((item, index) => (
+            <div key={index} className="component-card">
+              <strong>{item.category}:</strong> {item.name}
+              <span className="price">£{item.price}</span>
+            </div>
+          ))}
 
-              <div className="summary-text">
-                {formatRecommendation(recommendation).otherLines.map((line, idx) => (
-                  <p key={idx}>{line}</p>
-                ))}
-              </div>
+          <div className="summary-text">
+            {formatRecommendation(recommendation).otherLines.map((line, idx) => (
+              <p key={idx}>{line}</p>
+            ))}
+          </div>
+
+          {description && (
+            <div className="description-text">
+              <h4>Build Description:</h4>
+              <p>{description}</p>
             </div>
           )}
         </div>
