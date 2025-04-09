@@ -33,7 +33,7 @@ export default function PCBuilder() {
 
     for (let line of lines) {
       const match = line.match(
-        /^(?:\d+\.\s*)?(CPU|Processor|GPU|Graphics Card|Motherboard|RAM|Memory|Storage|SSD|HDD|PSU|Power Supply|Case|Cooling System|CPU Cooler|Monitor|Mouse|Keyboard|Operating System)?[:\-]?\s*(.*?)\\s*[-]\\s*£?(\\d+(\\.\\d+)?)/i
+        /^(?:\d+\.\s*)?(CPU|GPU|Motherboard|RAM|Storage|PSU|Case)?[:\-]?\s*(.*?)\\s*[-]\\s*£?(\\d+(\\.\\d+)?)/i
       );
 
       if (match) {
@@ -152,7 +152,7 @@ export default function PCBuilder() {
 
       {recommendation && (
         <div className="recommendation-box pretty-box">
-          <h3>AI-Recommended Build:</h3>
+          <h3>Recommended Build:</h3>
           {formatRecommendation(recommendation).items.map((item, index) => (
             <div key={index} className="component-card">
               <strong>{item.category}:</strong> {item.name}
