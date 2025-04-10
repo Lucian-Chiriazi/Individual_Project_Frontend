@@ -30,23 +30,24 @@ export default function PCBuilder() {
     const lines = text.split("\n").filter((line) => line.trim() !== "");
     const items = [];
     let otherLines = [];
-
+  
     for (let line of lines) {
+      // Match category (CPU, GPU, etc), name (until the last dash before price), and price
       const match = line.match(
-        /^(?:\d+\.\s*)?(CPU|GPU|Motherboard|RAM|Storage|PSU|Case)?[:\-]?\s*(.*?)\\s*[-]\\s*£?(\\d+(\\.\\d+)?)/i
+        /^(CPU|GPU|Motherboard|RAM|Storage|PSU|Case)?[:\-]?\s*(.+)\s[-–]\s£?(\d+(?:\.\d+)?)/i
       );
-
+  
       if (match) {
-        items.push({
-          category: match[1] || "Component",
-          name: match[2].trim(),
-          price: match[3],
-        });
+        const category = match[1] || "Component";
+        const name = match[2].trim();
+        const price = match[3];
+  
+        items.push({ category, name, price });
       } else {
         otherLines.push(line);
       }
     }
-
+  
     return { items, otherLines };
   };
 
@@ -89,12 +90,15 @@ export default function PCBuilder() {
       )}
 
       <label>Purpose</label>
-      <input
-        type="text"
+      <select
         value={purpose}
         onChange={(e) => setPurpose(e.target.value)}
-        placeholder="e.g. gaming, editing"
-      />
+      >
+        <option value="">-- Select Purpose --</option>
+        <option value="gaming">Gaming</option>
+        <option value="editing">Editing</option>
+        <option value="general">General</option>
+      </select>
 
       <fieldset className="checkbox-group">
         <legend>Include Peripherals:</legend>
@@ -145,7 +149,7 @@ export default function PCBuilder() {
 
       <button
         onClick={fetchRecommendations}
-        disabled={loading || !isValidBudget(budget)}
+        disabled={loading || !isValidBudget(budget) || purpose === ""}
       >
         {loading ? "Loading..." : "Get Recommendation"}
       </button>
