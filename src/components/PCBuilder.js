@@ -60,7 +60,7 @@ export default function PCBuilder() {
         body: JSON.stringify({
           budget: parseFloat(budget),
           purpose,
-          includeOS: includeOS,
+          include_os: includeOS,
           peripherals: Object.keys(peripherals).filter((key) => peripherals[key]),
         }),
       });
