@@ -1,24 +1,28 @@
 import React, { useState } from "react";
 import "../App.css";
 
+// Main component
 export default function PCBuilder() {
+  // State variables
   const [budget, setBudget] = useState("");
   const [purpose, setPurpose] = useState("");
   const [peripherals, setPeripherals] = useState({
     keyboard: false,
     mouse: false,
     monitor: false,
-  });
+  }); // Peripherals selection checkbox states.
   const [includeOS, setIncludeOS] = useState(false);
   const [recommendation, setRecommendation] = useState("");
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // Function to validate budget input
   const isValidBudget = (val) => {
     const parsed = parseFloat(val);
     return val !== "" && !isNaN(parsed) && parsed >= 500 && parsed <= 10000;
   };
 
+  // Function to handle budget input change
   const handlePeripheralChange = (e) => {
     setPeripherals({
       ...peripherals,
@@ -26,6 +30,7 @@ export default function PCBuilder() {
     });
   };
 
+  // Function to format the recommendation text
   const formatRecommendation = (text) => {
     const lines = text.split("\n").filter((line) => line.trim() !== "");
     const items = [];
@@ -36,7 +41,7 @@ export default function PCBuilder() {
       const match = line.match(
         /^(CPU|GPU|Motherboard|RAM|Storage|PSU|Case)?[:\-]?\s*(.+)\s[-–]\s£?(\d+(?:\.\d+)?)/i
       );
-  
+      // Assign extracted values to a component object
       if (match) {
         const category = match[1] || "Component";
         const name = match[2].trim();
@@ -44,15 +49,16 @@ export default function PCBuilder() {
   
         items.push({ category, name, price });
       } else {
-        otherLines.push(line);
+        otherLines.push(line); // For non-component lines
       }
     }
   
     return { items, otherLines };
   };
 
+  // Function to fetch recommendations from the server
   async function fetchRecommendations() {
-    setLoading(true);
+    setLoading(true); // Disable button
     try {
       const response = await fetch("https://pc-builder-app-531x.onrender.com/recommend", {
         method: "POST",
@@ -65,15 +71,19 @@ export default function PCBuilder() {
         }),
       });
 
+      // Parse the response
       const data = await response.json();
+      // Update UI with recommendation and description
       setRecommendation(data.recommendation || "No recommendations found.");
       setDescription(data.description || "");
     } catch (error) {
       setRecommendation("Error fetching recommendation.");
     }
-    setLoading(false);
+    setLoading(false); // End loading state
   }
 
+
+  // Render the components
   return (
     <div className="builder-container">
       <label>Budget (£)</label>
